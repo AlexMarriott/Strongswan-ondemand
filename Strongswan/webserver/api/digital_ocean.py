@@ -103,10 +103,8 @@ class DigitalOceanAPI:
 
 
 
-
-
 """
-example
+# example
 do = DigitalOceanAPI()
 public_key = ssh_gen()
 public_key_name = do.add_sshkey_to_account(public_key)

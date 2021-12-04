@@ -90,7 +90,8 @@ sudo ufw enable
 
 # references
 # https://www.digitalocean.com/community/tutorials/how-to-set-up-an-ikev2-vpn-server-with-strongswan-on-ubuntu-20-04 <-- Strongswan server conf
-
+# https://github.com/ansible/ansible-examples/tree/master/wordpress-nginx
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html
 
 # TODO
 # Make this deployable on the fly with ansible

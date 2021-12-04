@@ -1,5 +1,4 @@
 def ssh_gen():
-
     def write_file_bytes(**kwargs):
         for file, bytes in kwargs.items():
             if file == "private_key":
