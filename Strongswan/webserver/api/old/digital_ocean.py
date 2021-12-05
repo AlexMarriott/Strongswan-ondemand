@@ -55,7 +55,6 @@ class DigitalOceanAPI:
         try:
             # Checking to see if the public key is legit
             ssh = self.SSHKey(ssh_public_key)
-            ssh.parse()
             name = f"strongswan-{random.getrandbits(128)}"
             # If the key is good, we add to the account.
             key = self.digitalocean.SSHKey(self.manager.token,
@@ -79,13 +78,17 @@ class DigitalOceanAPI:
                 return key
         return False
 
-    def create_droplet(self, name=f'StrongSwan.ain.internal', region='LON1', ssh_key=""):
+    def create_droplet(self, name=f'StrongSwan.ain.internal', region='LON1', ssh_key=None):
+        if ssh_key is None:
+            ssh_key = self.manager.get_all_sshkeys()
+        print(ssh_key)
+
         droplet = self.digitalocean.Droplet(token=self.manager.token,
                                             name=name,
                                             region=region,
                                             image='ubuntu-20-04-x64',
                                             size_slug='s-1vcpu-1gb',
-                                            ssh_key=ssh_key,
+                                            ssh_key="49:4e:1c:12:97:a2:2b:b8:51:a6:72:63:77:d4:ab:c0",
                                             backups=False,
                                             tags="Strongswan")
 
@@ -103,14 +106,14 @@ class DigitalOceanAPI:
 
 
 
-"""
+
 # example
 do = DigitalOceanAPI()
 public_key = ssh_gen()
 public_key_name = do.add_sshkey_to_account(public_key)
 ssh_key = do.get_ssh_key_by_name(public_key_name)
-do.create_droplet(ssh_key=ssh_key)
-
+do.create_droplet()
+"""
 droplets_to_destory = do.get_all_servers_by_tag("Strongswan")
 
 for droplet in droplets_to_destory:

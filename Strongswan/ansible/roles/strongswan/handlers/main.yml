@@ -1,0 +1,3 @@
+---
+- name: restart strongswan
+  service: name=#TODO state=restarted enabled=yes

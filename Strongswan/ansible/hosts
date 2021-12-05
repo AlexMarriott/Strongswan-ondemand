@@ -1,0 +1,3 @@
+[strongswan-server]
+# This will need jn2 to drop in replace whatever the host file is.
+157.245.41.91

@@ -1,0 +1,95 @@
+---
+- name: Install strongswan packages
+  apt:
+    pkg:
+      - strongswan
+      - strongswan-pki
+      - libcharon-extra-plugins
+      - libcharon-extauth-plugins
+      - libstrongswan-extra-plugins
+    state=latest
+    update_cache: true
+
+- name: Ensuring ipsec.d directories are created.
+  file:
+    path: /etc/ipsec.d/
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - /cacerts
+    - /certs
+    - /private
+
+# Creating CA private key
+- name: Create private key
+  community.crypto.openssl_privatekey:
+    path: /root/private/ca-key.pem
+
+# Creating CA signing request
+- name: Create certificate signing request (CSR) for CA certificate
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: /root/private/ca-key.pem
+    common_name: VPN root CA
+    use_common_name_for_san: true
+    basic_constraints:
+      - 'CA:TRUE'
+    basic_constraints_critical: yes
+    key_usage:
+      - keyCertSign
+    key_usage_critical: true
+  register: ca_csr
+
+# Creating the CA cert from the csr
+- name: Create self-signed CA certificate from CSR
+  community.crypto.x509_certificate:
+    path: /root/private/ca-cert.pem
+    csr_content: "{{ ca_csr.csr }}"
+    privatekey_path: /root/private/ca-key.pem
+    provider: selfsigned
+
+
+- name: Generating the server root key
+  community.crypto.openssl_privatekey:
+    path: /etc/ipsec.d/private/server-key.pem
+  run_once: true
+
+- name: Create certificate signing request (CSR) for new certificate
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: /etc/ipsec.d/private/server-key.pem
+    common_name:
+      - "CN={{ IP }}"
+    subject_alt_name:
+      - "DNS: {{ IP }}"
+      - "DNS:@{{ IP }}"
+    extended_key_usage:
+      - "serverAuth"
+      - "ikeIntermediate"
+  run_once: true
+  register: csr
+
+- name: Sign certificate with our CA
+  community.crypto.x509_certificate_pipe:
+    csr_content: "{{ ca_csr.csr }}"
+    provider: ownca
+    ownca_path: /root/private/ca-cert.pem
+    ownca_privatekey_path: /root/private/ca-key.pem
+    ownca_not_after: +365d  # valid for one year
+    ownca_not_before: "-1d"  # valid since yesterday
+  run_once: true
+  register: certificate
+
+- name: (2/2) Store certificate
+  ansible.builtin.copy:
+    dest: /etc/ipsec.d/certs/server-cert.pem
+    content: "{{ result.certificate }}"
+  delegate_to: localhost
+  when: result is changed
+
+- name: Copy ipsec.conf
+  template: src=ipsec.j2 dest=/etc/ipsec.conf owner=root group=root mode=0644
+
+- name: Copy ipsec secrets
+  template: src=ipsec.secrets.j2 dest=/etc/ipsec.secrets
+  notify: restart strongswan-starter
