@@ -7,7 +7,7 @@
       - libcharon-extra-plugins
       - libcharon-extauth-plugins
       - libstrongswan-extra-plugins
-    state=latest
+    state: latest
     update_cache: true
 
 - name: Ensuring ipsec.d directories are created.
@@ -21,6 +21,15 @@
     - /cacerts
     - /certs
     - /private
+
+
+- name: Ensuring ipsec.d directories are created.
+  file:
+    path: /root/private/
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
 
 # Creating CA private key
 - name: Create private key
@@ -59,13 +68,13 @@
   community.crypto.openssl_csr_pipe:
     privatekey_path: /etc/ipsec.d/private/server-key.pem
     common_name:
-      - "CN={{ IP }}"
+      - "CN={{ ansible_default_ipv4.address }}"
     subject_alt_name:
-      - "DNS: {{ IP }}"
-      - "DNS:@{{ IP }}"
+      - "DNS: {{ ansible_default_ipv4.address }}"
+      - "DNS:@{{ ansible_default_ipv4.address }}"
     extended_key_usage:
       - "serverAuth"
-      - "ikeIntermediate"
+      #- "ikeIntermediate"
   run_once: true
   register: csr
 
@@ -78,18 +87,25 @@
     ownca_not_after: +365d  # valid for one year
     ownca_not_before: "-1d"  # valid since yesterday
   run_once: true
-  register: certificate
+  register: result
 
-- name: (2/2) Store certificate
+- debug: msg="{{ result.certificate }}"
+- name: Store certificate
   ansible.builtin.copy:
-    dest: /etc/ipsec.d/certs/server-cert.pem
-    content: "{{ result.certificate }}"
-  delegate_to: localhost
-  when: result is changed
+    content: "{{ result.certificate  }}"
+    dest: "/etc/ipsec.d/certs/server-cert.pem"
+
 
 - name: Copy ipsec.conf
-  template: src=ipsec.j2 dest=/etc/ipsec.conf owner=root group=root mode=0644
+  ansible.builtin.template:
+    src: ipsec.j2
+    dest: /etc/ipsec.conf
+    owner: root
+    group: root
+    mode: '0644'
 
 - name: Copy ipsec secrets
-  template: src=ipsec.secrets.j2 dest=/etc/ipsec.secrets
+  ansible.builtin.template:
+    src: ipsec.secrets
+    dest: /etc/ipsec.secrets
   notify: restart strongswan-starter

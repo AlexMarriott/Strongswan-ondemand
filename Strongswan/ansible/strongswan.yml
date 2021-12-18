@@ -1,2 +1,14 @@
-https://github.com/ansible/ansible-examples/tree/master/wordpress-nginx
-https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html
+---
+- name: strongswan
+  hosts: all
+  remote_user: root
+  # remote_user: user
+  # become: yes
+  # become_method: sudo
+
+  roles:
+    - strongswan
+
+
+#https://github.com/ansible/ansible-examples/tree/master/wordpress-nginx
+#https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html

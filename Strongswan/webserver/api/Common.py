@@ -2,9 +2,9 @@ def ssh_gen():
     def write_file_bytes(**kwargs):
         for file, bytes in kwargs.items():
             if file == "private_key":
-                ssh_file_location = "C:\\Temp\\id_rsa"
+                ssh_file_location = "/tmp/id_rsa"
             else:
-                ssh_file_location = "C:\\Temp\\id_rsa.pub"
+                ssh_file_location = "/tmp/id_rsa.pub"
             with open(ssh_file_location, "wb") as f:
                 f.write(bytes)
                 f.close()

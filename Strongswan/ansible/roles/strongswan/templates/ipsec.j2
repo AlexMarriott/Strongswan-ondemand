@@ -15,7 +15,7 @@ conn ikev2-vpn
     rekey=no
 
     left=%any
-    leftid=46.101.43.136
+    leftid={{ ansible_default_ipv4.address }}
     leftcert=server-cert.pem
     leftsendcert=always
     leftsubnet=0.0.0.0/0
