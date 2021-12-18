@@ -7,7 +7,9 @@
   # become_method: sudo
 
   roles:
+    - setup
     - strongswan
+    - ufw
 
 
 #https://github.com/ansible/ansible-examples/tree/master/wordpress-nginx

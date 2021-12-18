@@ -1,2 +1,5 @@
-- name: restart strongswan
+- name: restart ipsec
   service: name=ipsec state=restarted enabled=yes
+
+- name: restart strongswan
+  service: name=strongswan-starter state=restarted enabled=yes

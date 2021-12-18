@@ -108,4 +108,11 @@
   ansible.builtin.template:
     src: ipsec.secrets
     dest: /etc/ipsec.secrets
-  notify: restart strongswan-starter
+  notify: restart ipsec
+
+- name: Get CA.crt for the client config
+  ansible.builtin.fetch:
+    src: /etc/ipsec.d/certs/server-cert.pem
+    dest: /tmp/server-cert.pem
+    flat: yes
+    notify: restart strongswan

@@ -1,0 +1,42 @@
+---
+- name: Allow SSH
+  community.general.ufw:
+    rule: allow
+    name: OpenSSH
+    state: enabled
+
+- name: Allow all access to udp port 500
+  community.general.ufw:
+    rule: allow
+    port: '500'
+    proto: udp
+
+- name: Allow all access to udp port 4500
+  community.general.ufw:
+    rule: allow
+    port: '4500'
+    proto: udp
+
+- name: Uncomment ip_forward
+  replace:
+      path: "/etc/ufw/sysctl.conf"
+      regexp: "#net/ipv4/ip_forward=1"
+      replace: "net/ipv4/ip_forward=1"
+
+- name: Add mappings to /etc/ufw/sysctl.conf
+  blockinfile:
+    path: /etc/ufw/sysctl.conf
+    block: |
+      {{ item.name }}
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item.name }}"
+  loop:
+    - { name: net/ipv4/ip_no_pmtu_disc=1 }
+    - { name: net/ipv4/conf/all/send_redirects=0 }
+    - { name: net/ipv4/conf/all/accept_redirects=0 }
+
+- name: Allow all access to tcp port 80
+  community.general.ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+    state: enabled
