@@ -34,12 +34,12 @@
 # Creating CA private key
 - name: Create private key
   community.crypto.openssl_privatekey:
-    path: /root/private/ca-key.pem
+    path: /etc/ipsec.d/private/ca-key.pem
 
 # Creating CA signing request
 - name: Create certificate signing request (CSR) for CA certificate
   community.crypto.openssl_csr_pipe:
-    privatekey_path: /root/private/ca-key.pem
+    privatekey_path: /etc/ipsec.d/private/ca-key.pem
     common_name: VPN root CA
     use_common_name_for_san: true
     basic_constraints:
@@ -53,9 +53,9 @@
 # Creating the CA cert from the csr
 - name: Create self-signed CA certificate from CSR
   community.crypto.x509_certificate:
-    path: /root/private/ca-cert.pem
+    path: /etc/ipsec.d/cacerts/ca-cert.pem
     csr_content: "{{ ca_csr.csr }}"
-    privatekey_path: /root/private/ca-key.pem
+    privatekey_path: /etc/ipsec.d/private/ca-key.pem
     provider: selfsigned
 
 
@@ -68,10 +68,11 @@
   community.crypto.openssl_csr_pipe:
     privatekey_path: /etc/ipsec.d/private/server-key.pem
     common_name:
-      - "CN={{ ansible_default_ipv4.address }}"
+      - "{{ ansible_default_ipv4.address }}"
     subject_alt_name:
       - "DNS: {{ ansible_default_ipv4.address }}"
       - "DNS:@{{ ansible_default_ipv4.address }}"
+      - "DNS:CN={{ ansible_default_ipv4.address }}"
     extended_key_usage:
       - "serverAuth"
       #- "ikeIntermediate"
@@ -80,10 +81,10 @@
 
 - name: Sign certificate with our CA
   community.crypto.x509_certificate_pipe:
-    csr_content: "{{ ca_csr.csr }}"
+    csr_content: "{{ csr.csr }}"
     provider: ownca
-    ownca_path: /root/private/ca-cert.pem
-    ownca_privatekey_path: /root/private/ca-key.pem
+    ownca_path: etc/ipsec.d/cacerts/ca-cert.pem
+    ownca_privatekey_path: /etc/ipsec.d/private/ca-key.pem
     ownca_not_after: +365d  # valid for one year
     ownca_not_before: "-1d"  # valid since yesterday
   run_once: true
