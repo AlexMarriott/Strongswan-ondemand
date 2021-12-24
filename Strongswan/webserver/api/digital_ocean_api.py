@@ -7,7 +7,7 @@ import time
 import os
 
 
-from Common import ssh_gen
+from .Common import ssh_gen
 """
 """
 class DigitalOceanApi:
@@ -125,16 +125,3 @@ class DigitalOceanApi:
                 logging.warning(f"sshkey: {key['name']} could not be deleted... status code: {resp.status_code}")
                 return {"status_code": resp.status_code, "respone": resp.text}
         return True
-
-o = DigitalOceanApi()
-
-public_key = ssh_gen()
-sshkey = o.add_sshkey_to_account(public_key)
-
-o.create_droplet(ssh_key_id=sshkey['respone']['ssh_key']['id'], tags="StrongSwan")
-"""
-droplet_id = o.get_droplet("Strongswan.internal.ain")
-
-blah = o.delete_droplet(droplet_id['droplet']['id'])
-o.delete_all_ssh_keys()
-"""
