@@ -70,12 +70,12 @@
     common_name:
       - "{{ ansible_default_ipv4.address }}"
     subject_alt_name:
-      - "DNS: {{ ansible_default_ipv4.address }}"
-      - "DNS:@{{ ansible_default_ipv4.address }}"
-      - "DNS:CN={{ ansible_default_ipv4.address }}"
+      - "DNS:{{ ansible_default_ipv4.address }}"
+      - "IP:{{ ansible_default_ipv4.address }}"
     extended_key_usage:
       - "serverAuth"
-      #- "ikeIntermediate"
+      # iKEIntermediate lool, I used the OID
+      - "1.3.6.1.5.5.8.2.2"
   run_once: true
   register: csr
 
@@ -83,7 +83,7 @@
   community.crypto.x509_certificate_pipe:
     csr_content: "{{ csr.csr }}"
     provider: ownca
-    ownca_path: etc/ipsec.d/cacerts/ca-cert.pem
+    ownca_path: /etc/ipsec.d/cacerts/ca-cert.pem
     ownca_privatekey_path: /etc/ipsec.d/private/ca-key.pem
     ownca_not_after: +365d  # valid for one year
     ownca_not_before: "-1d"  # valid since yesterday
