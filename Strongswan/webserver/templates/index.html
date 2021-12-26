@@ -11,6 +11,13 @@
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="{{url_for('static', filename='js/index.js')}}"></script>
+    <script type=text/javascript>
+
+
+</script>
 </head>
 <body class="sb-nav">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -36,10 +43,11 @@
                 <i class="fas fa-table me-1"></i>
                 Running Instances
             </div>
-                    <div class="btn-group">
-        <button type="button">Create New Server!</button>
-        <button type="button">Refresh</button>
-        </div>
+            <div class="btn-group">
+                <a href="{{ url_for('api/create_server') }}"> <button class='btn btn-primary' id="create_server">Create Strongswan Server!</button>
+                <a href="{{ url_for('blog.edit_post', id=post['id']) }}"> <button class='btn btn-primary' id="refresh_servers" onclick="refresh_servers();">Refresh</button>
+
+            </div>
             <div class="card-body">
                 <table id="datatablesSimple">
                     <thead>
@@ -64,7 +72,7 @@
                     {% for droplet in droplets %}
                     <tr>
 
-                        <td><input type="checkbox" name="{{ droplet.id }}" /> {{ droplet.id }}</td>
+                        <td><input type="checkbox" name="{{ droplet.id }}"/> {{ droplet.id }}</td>
                         <td>{{ droplet.name }}</td>
                         <td>{{ droplet.ip_address }}</td>
                         <td>{{ droplet.date_created }}</td>
@@ -97,4 +105,13 @@
 <script src="{{ url_for('static', filename='js/datatables-simple-demo.js') }}"></script>
 
 </body>
+<div id="loading">
+  <img id="loading-image" src="{{ url_for('static', filename='ajax-loader.gif') }}" alt="Loading..." />
+</div>
+<script>
+  $(window).load(function() {
+    $('#loading').hide();
+  });
+</script>
+
 </html>

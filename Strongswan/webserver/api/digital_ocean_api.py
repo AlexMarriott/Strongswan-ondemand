@@ -7,7 +7,6 @@ import time
 import os
 
 
-from .Common import ssh_gen
 """
 """
 class DigitalOceanApi:
