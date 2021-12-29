@@ -91,6 +91,12 @@ class DigitalOceanApi:
             if i['name'] == droplet_name:
                 return json.loads(self.session.get(f"{self.url}/droplets/{i['id']}").text)
 
+    def get_droplet_by_id(self, droplet_id):
+        nodes = self.list_droplets()
+        for i in nodes:
+            if i['id'] == droplet_id:
+                return json.loads(self.session.get(f"{self.url}/droplets/{i['id']}").text)
+
     def get_all_sshkeys(self):
         return json.loads(self.session.get(f"{self.url}/account/keys/").text)['ssh_keys']
 

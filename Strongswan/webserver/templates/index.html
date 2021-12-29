@@ -83,6 +83,7 @@
                         <td>{{ droplet.ip_address }}</td>
                         <td>{{ droplet.date_created }}</td>
                         <td>{{ droplet.status }}</td>
+                        <td><a href="{{ url_for('vpncert_download', filename=filename) }}">Download VPN cert</a></td>
                     </tr>
                     {% endfor %}
                     </tbody>
@@ -116,10 +117,4 @@
 <div id="loading">
   <img id="loading-image" src="{{ url_for('static', filename='ajax-loader.gif') }}" alt="Loading..." />
 </div>
-<script>
-  $(window).load(function() {
-    $('#loading').hide();
-  });
-</script>
-
 </html>

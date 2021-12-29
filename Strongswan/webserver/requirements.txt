@@ -2,3 +2,4 @@ python-digitalocean
 requests
 sshpubkeys
 flask
+ansible_runner
