@@ -1,12 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from api.digital_ocean_api import DigitalOceanApi
 from datetime import datetime
 
+import uuid
 import os
 
 #from database import DataBase
 
+
 app = Flask(__name__)
+app.secret_key = uuid.uuid4().hex
+
 do = DigitalOceanApi()
 @app.route('/')
 def index():
@@ -29,17 +33,16 @@ def refresh_servers():
                           'status': droplet['status']})
     return node_list
 
-@app.route('/api/create_server', methods=['POST'])
+@app.route('/api/create_server', methods=['GET'])
 def create_server():
     #try:
     req = request.get_json()
     print(req)
     #except as Ex
 
-    pass
     # Run the DO create server api
     do = DigitalOceanApi()
-    from .api.Common import ssh_gen
+    from api.Common import ssh_gen
     public_key = ssh_gen()
     sshkey = do.add_sshkey_to_account(public_key)
 
@@ -51,16 +54,16 @@ def create_server():
 # Return the CA certificate + username + password
 
 
-@app.route('/api/delete_server')
+@app.route('/api/delete_server', methods=['GET','POST'])
 def delete_server():
-    req = request.get_json()
-    print(req)
-    pass
+    ids = request.form.getlist('ids')
+    for dropletid in ids:
+        do.delete_droplet(dropletid)
+    flash(f"Successfully Deleted: {request.form.getlist('checkbox')}")
+    return redirect(url_for('index'))
 
-    droplet_id = do.get_droplet("Strongswan.internal.ain")
 
-    do.delete_droplet(droplet_id['droplet']['id'])
-    do.delete_all_ssh_keys()
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="80") #ssl_context="adhoc")
