@@ -41,6 +41,9 @@ def refresh_servers():
 @app.route('/api/create_server', methods=['GET'])
 def create_server():
     # Run the DO create server api
+    time.sleep(10)
+    return redirect(url_for('index'))
+
     do = DigitalOceanApi()
     from api.Common import ssh_gen
     public_key = ssh_gen()
@@ -67,8 +70,7 @@ def create_server():
         fout.close()
 
         os.chmod('/tmp/id_rsa', 0o700)
-                #Run the ansible scripts using a ip call back + ssh key from create DO server
-                #r = ansible_runner.run(private_data_dir='../ansible', inventory='../ansible/hosts', playbook='strongswan.yml')
+        #Run the ansible scripts using a ip call back + ssh key from create DO server
         time.sleep(20)
         out, err, rc = ansible_runner.run_command(
                     executable_cmd='ansible-playbook',
@@ -81,10 +83,10 @@ def create_server():
         print("rc: {}".format(rc))
         print("out: {}".format(out))
         print("err: {}".format(err))
-            # Return the CA certificate + username + password
+        # Return the CA certificate + username + password
         stored_file_name = 'server-cert.pem'
-            # TODO make a vpn key for each running sevrer
-            #node_details['droplet']['id']
+        # TODO make a vpn key for each running sevrer
+        #node_details['droplet']['id']
         return redirect(url_for('index', filename=stored_file_name))
 
 @app.route('/api/vpncertdownload/<filename>')

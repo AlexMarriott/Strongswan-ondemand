@@ -14,107 +14,113 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="{{url_for('static', filename='js/index.js')}}"></script>
-    <script type=text/javascript>
 
-
-</script>
 </head>
-<body class="sb-nav">
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="index.html">Strongswan On Demand</a>
-    <!-- Sidebar Toggle-->
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-            class="fas fa-bars"></i></button>
-    <!-- Navbar Search-->
-    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-        <div class="input-group">
-            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
-                   aria-describedby="btnNavbarSearch"/>
-            <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
-        </div>
-    </form>
-</nav>
-<div id="layoutSidenav">
-    <div class="container-fluid px-4">
-        <title>Strongswan On Demand</title>
-        <div class="card mb-4">
-            <div class="card-header">
-                <i class="fas fa-table me-1"></i>
-                Running Instances
+
+    <body class="sb-nav">
+    <div class="se-pre-con"></div>
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" href="index.html">Strongswan On Demand</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+                class="fas fa-bars"></i></button>
+        <!-- Navbar Search-->
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            <div class="input-group">
+                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
+                       aria-describedby="btnNavbarSearch"/>
+                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </nav>
+    <div id="layoutSidenav">
+        <div class="container-fluid px-4">
+            <title>Strongswan On Demand</title>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    Running Instances
+                </div>
+                <div class="btn-group">
+                    <a href="{{ url_for('create_server') }}">
+                        <button class='btn btn-primary' id="create_server">Create Strongswan
+                            Server!
+                        </button>
+                    </a>
+                    <a href="{{ url_for('index') }}">
+                        <button class='btn btn-primary' id="refresh_servers">Refresh</button>
+                    </a>
+                </div>
+
+
+                <form action="{{ url_for('delete_server') }}" method="post">
+
+                    <button class='btn btn-primary' id="delete_server">Delete Server(s)</button>
+
+
+                    <div class="card-body">
+                        <table id="datatablesSimple">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Server</th>
+                                <th>IP</th>
+                                <th>Date Created</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Server</th>
+                                <th>IP</th>
+                                <th>Date Created</th>
+                                <th>Status</th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            {% for droplet in droplets %}
+                            <tr>
+
+                                <td><input type="checkbox" name="ids" value="{{ droplet.id }}"/> {{ droplet.id }}</td>
+                                <td>{{ droplet.name }}</td>
+                                <td>{{ droplet.ip_address }}</td>
+                                <td>{{ droplet.date_created }}</td>
+                                <td>{{ droplet.status }}</td>
+                                <td><a href="{{ url_for('vpncert_download', filename=filename) }}">Download VPN cert</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+
             </div>
 
-            <div class="btn-group">
-                <a href="{{ url_for('create_server') }}"> <button class='btn btn-primary' id="create_server">Create Strongswan Server!</button></a>
-                <a href="{{ url_for('index') }}"> <button class='btn btn-primary' id="refresh_servers">Refresh</button></a>
-
-
-            </div>
-<form action="{{ url_for('delete_server') }}" method="post">
-
-<button class='btn btn-primary' id="delete_server">Delete Server(s)</button>
-
-            <div class="card-body">
-                <table id="datatablesSimple">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Server</th>
-                        <th>IP</th>
-                        <th>Date Created</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tfoot>
-                    <tr>
-                        <th>ID</th>
-                        <th>Server</th>
-                        <th>IP</th>
-                        <th>Date Created</th>
-                        <th>Status</th>
-                    </tr>
-                    </tfoot>
-                    <tbody>
-                    {% for droplet in droplets %}
-                    <tr>
-
-                        <td><input type="checkbox" name="ids" value="{{ droplet.id }}"/> {{ droplet.id }}</td>
-                        <td>{{ droplet.name }}</td>
-                        <td>{{ droplet.ip_address }}</td>
-                        <td>{{ droplet.date_created }}</td>
-                        <td>{{ droplet.status }}</td>
-                        <td><a href="{{ url_for('vpncert_download', filename=filename) }}">Download VPN cert</a></td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-    </form>
-
-        </div>
-
-        <footer class="py-4 bg-light mt-auto">
-            <div class="container-fluid px-4">
-                <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Your Website 2021</div>
-                    <div>
-                        <a href="#">Privacy Policy</a>
-                        &middot;
-                        <a href="#">Terms &amp; Conditions</a>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Your Website 2021</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </footer>
+            </footer>
+        </div>
     </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
-<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-<script src="{{ url_for('static', filename='js/datatables-simple-demo.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/datatables-simple-demo.js') }}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
 
-</body>
-<div id="loading">
-  <img id="loading-image" src="{{ url_for('static', filename='ajax-loader.gif') }}" alt="Loading..." />
-</div>
+    </body>
 </html>
