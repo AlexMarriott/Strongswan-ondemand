@@ -74,7 +74,7 @@ def create_server():
         time.sleep(20)
         out, err, rc = ansible_runner.run_command(
                     executable_cmd='ansible-playbook',
-                    cmdline_args=['strongswan.yml', '-i', 'hosts','-v', '-u',  'root'],
+                    cmdline_args=['strongswan.yml', '-i', 'hosts','-v', '-u',  'root', '--rotate-artifacts'],
                     host_cwd='../ansible',
                     input_fd=sys.stdin,
                     output_fd=sys.stdout,
@@ -85,7 +85,7 @@ def create_server():
         print("err: {}".format(err))
         # Return the CA certificate + username + password
         stored_file_name = 'server-cert.pem'
-        # TODO make a vpn key for each running sevrer
+        # TODO make a vpn key for each running server
         #node_details['droplet']['id']
         return redirect(url_for('index', filename=stored_file_name))
 
