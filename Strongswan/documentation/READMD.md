@@ -1,8 +1,8 @@
-# Get a working Stongswan server
-# Using the config files, get a ansible version which deploys static files for strongswan
-# Next will be to take the values of the running server and template it across a new instance each time
-# Note, this will use selfsigned CA. Could also add a way of using windows CA for furture
-# For testing purposes, you can install apache2 on the DO server and then change the listen directive in the ports.conf file to a private address to verify you can connect to that ip address.
+ Get a working Stongswan server
+ Using the config files, get a ansible version which deploys static files for strongswan
+ Next will be to take the values of the running server and template it across a new instance each time
+ Note, this will use selfsigned CA. Could also add a way of using windows CA for furture
+ For testing purposes, you can install apache2 on the DO server and then change the listen directive in the ports.conf file to a private address to verify you can connect to that ip address.
 
 
 # Strongswan Packages
@@ -31,12 +31,12 @@ sudo cp -r ~/pki/* /etc/ipsec.d/
 sudo mv /etc/ipsec.conf{,.original}
 
 # Edit and create the new ipsec.conf
-# sudo vim /etc/ipsec.conf
-# This can be found in the strongswan/ipsec.conf
+ sudo vim /etc/ipsec.conf
+ This can be found in the strongswan/ipsec.conf
 
 # Next, we need to create a ipsec.secrets file
 sudo vim /etc/ipsec.secrets
-# This can be found in the strongswan/ipsec.conf
+ This can be found in the strongswan/ipsec.conf
 
 # Next the strongswan service needs a restart.
 sudo systemctl restart strongswan-starter
@@ -60,10 +60,10 @@ vim /etc/ufw/before.rules
 # Now we need to enable packet forwarding to the server, sed should be used again.
 vim /etc/ufw/sysctl.conf
 
-# uncomment: net/ipv4/ip_forward=1
-# add: net/ipv4/conf/all/accept_redirects=0
-# add: net/ipv4/conf/all/send_redirects=0
-# add: net/ipv4/ip_no_pmtu_disc=1
+ uncomment: net/ipv4/ip_forward=1
+ add: net/ipv4/conf/all/accept_redirects=0
+ add: net/ipv4/conf/all/send_redirects=0
+ add: net/ipv4/ip_no_pmtu_disc=1
 
 # Now reload ufw.
 sudo ufw disable
