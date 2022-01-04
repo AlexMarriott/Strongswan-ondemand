@@ -41,8 +41,6 @@ def refresh_servers():
 @app.route('/api/create_server', methods=['GET'])
 def create_server():
     # Run the DO create server api
-    time.sleep(10)
-    return redirect(url_for('index'))
 
     do = DigitalOceanApi()
     from api.Common import ssh_gen
@@ -74,7 +72,7 @@ def create_server():
         time.sleep(20)
         out, err, rc = ansible_runner.run_command(
                     executable_cmd='ansible-playbook',
-                    cmdline_args=['strongswan.yml', '-i', 'hosts','-v', '-u',  'root', '--rotate-artifacts'],
+                    cmdline_args=['strongswan.yml', '-i', 'hosts','-v', '-u',  'root'],
                     host_cwd='../ansible',
                     input_fd=sys.stdin,
                     output_fd=sys.stdout,
