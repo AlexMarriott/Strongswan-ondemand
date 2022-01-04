@@ -3,3 +3,4 @@ requests
 sshpubkeys
 flask
 ansible_runner
+ansible
