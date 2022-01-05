@@ -2,5 +2,8 @@ python-digitalocean
 requests
 sshpubkeys
 flask
+flask_sqlalchemy
+flask-login
 ansible_runner
 ansible
+werkzeug
