@@ -1,19 +1,16 @@
 import logging
 import random
-
 import requests
 import json
 import time
 import os
 
 
-"""
-"""
 class DigitalOceanApi:
     from sshpubkeys import SSHKey, InvalidKeyError
 
     def __init__(self):
-        self.access_token = os.environ['DO_access_token']
+        self.access_token = os.environ['DIGITALOCEAN_ACCESS_TOKEN']
         self.session = requests.Session()
         self.session.headers = {"Authorization": "Bearer {0}".format(self.access_token)}
         self.url = "https://api.digitalocean.com/v2"

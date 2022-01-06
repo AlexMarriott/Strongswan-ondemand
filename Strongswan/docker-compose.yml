@@ -1,0 +1,40 @@
+version: '3'
+services:
+  webserver:
+    build: .
+    expose:
+      - "443"
+    environment:
+      DIGITALOCEAN_ACCESS_TOKEN: ${DIGITALOCEAN_ACCESS_TOKEN}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - /opt/ssh:/tmp/id_rsa
+      - /opt/ssh:/tmp/id_rsa.pub
+      - /opt/ssh:/tmp/server-cert.pem
+    env_file:
+      - flask-variables.env
+    networks:
+      - docker-network
+
+  nginx:
+    image: nginx
+    ports:
+      - 443:443
+      - 80:80
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/nginx.conf
+      - ./nginx/error.log:/etc/nginx/error_log/error.log
+      - ./nginx/cache:/etc/nginx/cache
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    networks:
+      - docker-network
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+
+networks:
+  docker-network:
