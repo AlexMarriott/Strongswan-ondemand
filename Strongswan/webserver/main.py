@@ -1,3 +1,5 @@
+import logging
+
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user
@@ -10,7 +12,7 @@ import os
 import sys
 import time
 
-# import ansible_runner
+import ansible_runner
 
 do = DigitalOceanApi()
 app = create_app()
@@ -79,18 +81,18 @@ def create_server():
     from api.Common import ssh_gen
     public_key = ssh_gen()
     sshkey = do.add_sshkey_to_account(public_key)
-
+    logging.info("ssh key created")
     resp = do.create_droplet(ssh_key_id=sshkey['respone']['ssh_key']['id'], tags="StrongSwan")
-    print(resp)
+    logging.info(f"status_code: {resp['status_code']} message: {resp['respone']}")
     if 200 < resp['status_code'] < 205:
         node_details = do.get_droplet_by_id(resp['respone']['droplet']['id'])
         print(node_details)
 
         # Prearing the ansible files.
         # input file
-        fin = open("../ansible/hosts.template", "rt")
+        fin = open("ansible/hosts.template", "rt")
         # output file to write the result to
-        fout = open("../ansible/hosts", "wt")
+        fout = open("ansible/hosts", "wt")
         # for each line in the input file
         for line in fin:
             # read replace the string and write to output file
@@ -106,7 +108,7 @@ def create_server():
         out, err, rc = ansible_runner.run_command(
             executable_cmd='ansible-playbook',
             cmdline_args=['strongswan.yml', '-i', 'hosts', '-v', '-u', 'root'],
-            host_cwd='../ansible',
+            host_cwd='ansible/',
             input_fd=sys.stdin,
             output_fd=sys.stdout,
             error_fd=sys.stderr,
@@ -119,6 +121,10 @@ def create_server():
         # TODO make a vpn key for each running server
         # node_details['droplet']['id']
         return redirect(url_for('index', filename=stored_file_name))
+    else:
+        logging.warning(resp)
+        flash(f"Could not create the strongswan server. Error Code: {resp.status}, Error Message: {resp.text}")
+        return redirect(url_for('index'))
 
 
 @login_required

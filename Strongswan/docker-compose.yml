@@ -3,25 +3,21 @@ services:
   webserver:
     build: .
     expose:
-      - "443"
+      - "80"
     environment:
       DIGITALOCEAN_ACCESS_TOKEN: ${DIGITALOCEAN_ACCESS_TOKEN}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
-    volumes:
-      - /opt/ssh:/tmp/id_rsa
-      - /opt/ssh:/tmp/id_rsa.pub
-      - /opt/ssh:/tmp/server-cert.pem
     env_file:
-      - flask-variables.env
+      - .env
     networks:
       - docker-network
 
   nginx:
     image: nginx
     ports:
-      - 443:443
-      - 80:80
+      - 8443:8443
+      - 8080:8080
     volumes:
       - ./nginx/default.conf:/etc/nginx/nginx.conf
       - ./nginx/error.log:/etc/nginx/error_log/error.log
@@ -35,6 +31,6 @@ services:
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
-
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 networks:
   docker-network:

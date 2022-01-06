@@ -3,6 +3,7 @@ def ssh_gen():
         for file, bytes in kwargs.items():
             if file == "private_key":
                 ssh_file_location = "/tmp/id_rsa"
+
             else:
                 ssh_file_location = "/tmp/id_rsa.pub"
             with open(ssh_file_location, "wb") as f:
