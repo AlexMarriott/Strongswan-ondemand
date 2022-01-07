@@ -1,10 +1,8 @@
-import os
-import uuid
-
-from flask import Flask, flash, redirect, request, url_for
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from werkzeug.security import generate_password_hash
+
+import uuid
 
 db = SQLAlchemy()
 
@@ -20,6 +18,7 @@ def create_app():
     from models import User
     import logging
     logging.basicConfig(filename='error.log', level=logging.DEBUG)
+
     @login_manager.user_loader
     def load_user(user_id):  # reload user object from the user ID stored in the session
         # since the user_id is just the primary key of our user table, use it in the query for the user

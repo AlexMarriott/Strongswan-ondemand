@@ -1,5 +1,3 @@
-import logging
-
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user
@@ -11,7 +9,7 @@ from models import User
 import os
 import sys
 import time
-
+import logging
 import ansible_runner
 
 do = DigitalOceanApi()

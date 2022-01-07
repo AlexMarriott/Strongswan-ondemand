@@ -13,6 +13,7 @@
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src="{{url_for('static', filename='js/index.js')}}"></script>
 
 </head>
@@ -42,7 +43,7 @@
             </div>
             <div class="btn-group">
                 <a href="{{ url_for('create_server') }}">
-                    <button class='btn btn-primary' id="create_server">Create Strongswan
+                    <button class='btn btn-primary' id="create_server" onclick="$('#loading').show();">Create Strongswan
                         Server!
                     </button>
                 </a>
@@ -118,6 +119,8 @@
 <script src="{{ url_for('static', filename='js/datatables-simple-demo.js') }}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+<div id="loading" style="display:none;"><img src="{{ url_for('static', filename='loadingimage.gif') }}" alt=""/>Loading!
+</div>
 
 </body>
 </html>
