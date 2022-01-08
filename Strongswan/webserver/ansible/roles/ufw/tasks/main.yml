@@ -69,4 +69,4 @@
 - name: Reload service ufw
   ansible.builtin.service:
     name: ufw
-    state: reloaded
+    state: restarted
