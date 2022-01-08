@@ -48,14 +48,16 @@
                     </button>
                 </a>
                 <a href="{{ url_for('index') }}">
-                    <button class='btn btn-primary' id="refresh_servers">Refresh</button>
+                    <button class='btn btn-primary' id="refresh_servers" onclick="$('#loading').show();">Refresh
+                    </button>
                 </a>
             </div>
 
 
             <form action="{{ url_for('delete_server') }}" method="post">
 
-                <button class='btn btn-primary' id="delete_server">Delete Server(s)</button>
+                <button class='btn btn-primary' id="delete_server" onclick="$('#loading').show();">Delete Server(s)
+                </button>
 
 
                 <div class="card-body">
