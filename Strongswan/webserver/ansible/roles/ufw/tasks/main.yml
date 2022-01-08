@@ -65,4 +65,8 @@
     port: '80'
     proto: tcp
     state: enabled
-    notify: restart ufw
+
+- name: Reload service ufw
+  ansible.builtin.service:
+    name: ufw
+    state: reloaded
