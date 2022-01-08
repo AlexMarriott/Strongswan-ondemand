@@ -65,3 +65,4 @@
     port: '80'
     proto: tcp
     state: enabled
+    notify: restart ufw
