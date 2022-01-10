@@ -13,7 +13,7 @@ For Debian/Ubuntu, install the following:
 
 ```bash
 # Install build dependencies on Debian or Ubuntu.
-sudo apt-get install ansible python3 python3-pip docker-compose docker
+sudo apt-get install ansible python3 python3-pip docker-compose docker python3.8-venv
 ```
 
 Once you have the dependencies installed:
@@ -29,7 +29,7 @@ Next add a username, password and [digitalocean token](https://docs.digitalocean
 
 ```bash
 vim flask-variable.env
-mv flask-variable.env .env
+mv flask-variables.env .env
 docker-compose up -d 
 ```
 
