@@ -1,7 +1,4 @@
-from Strongswan.webserver.api import digital_ocean_api
-
 import unittest
-import json
 
 
 class DigitalOceanApiTest(unittest.TestCase):
@@ -18,4 +15,3 @@ class DigitalOceanApiTest(unittest.TestCase):
 
     def test_delete_node(self):
         pass
-
