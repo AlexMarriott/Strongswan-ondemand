@@ -24,7 +24,7 @@ source env/bin/activate
 pip3 install -r webserver/requirements.txt
 ```
 
-Next add a username, password and digital ocean token https://docs.digitalocean.com/reference/api/create-personal-access-token/ to the entries within the "flask-variable.env", rename it to "
+Next add a username, password and [digitalocean token] (https://docs.digitalocean.com/reference/api/create-personal-access-token/) to the entries within the "flask-variable.env", rename it to "
 .env" and start up the nginx and flask containers.
 
 ```bash
